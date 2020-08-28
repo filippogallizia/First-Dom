@@ -43,8 +43,7 @@
 
     const randomColor = () => partyColors[Math.floor(Math.random() * partyColors.length)];
     
-    window.addEventListener('DOMContentLoaded', (event) => {
-      
+    function onWindowReady (e) {
       const partyBtn = document.querySelector('.start');
       const danceFloor = document.querySelector('.disco');
 
@@ -62,7 +61,9 @@
           }, 200);
         }
       });
-    });
+    }
+
+    window.addEventListener('DOMContentLoaded', onWindowReady);
 
   </script>
 </body>
