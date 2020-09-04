@@ -5,49 +5,99 @@
   <style type="text/css">
     * {
       margin: 0;
-      padding: 0;
     }
     .disco {
       display: flex;
-      justify-content: center;
       flex-direction: column;
-      position: absolute;
       background-color: green;
-      width: 100%;
-      height: 100%;
-    }
+      justify-content: center;
+      align-items: center; 
+      height: 50vh;
+      
+         }
     .start {
       cursor: pointer;
-      margin: auto;
-      padding: 16px;
       font-weight: 600;
       color: white;
-      width: 100px;
+      padding: 0.5em 2em; 
       background-color: crimson;
       border-radius: 4px;
       border-bottom: 3px solid darkred;
       font-size: 20px;
       font-family: "Helvetica";
       text-align: center;
-
+      border: black solid 1px;
     }
+
     .start:hover {
       background-color: white;
       color: black;
       box-shadow: 3px 3px 15px -5px rgba(0,0,0,0.58);
     }
+
+    form {
+      color: black;
+    }
+
+    .inline-botton {
+      border: solid black 1px;
+      background-color: white;
+      color: red;
+    }
+
+    .vabbe {
+      color: white;
+    }
+
+    .empty {
+      visibility: hidden;
+    }
+
+    .wishlist-container {
+      width: 300px;
+      background-color: #CCC;
+      margin: 16px 0 0 0;
+      padding: 0px 16px 16px 16px;
+      list-style: none;
+      font-size: 20px;
+      font-family: 'Helvetica';
+    }
+    .wishlist-item {
+      margin-top: 16px;
+      color: #333;
+      background-color: #FAFAFA;
+      padding: 16px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
+
   <div class="disco">
-    <div class="start">START <i class="fas fa-chevron-circle-right"></i></div>
+    <div class="start">start <i class="fas fa-chevron-circle-right"></i></div>
+    <form id = "add-wishing-list" action="#" method="post">
+      <label for="random">Type your wishing list</label><br>
+      <input type="text" id="random"><br>
+      <button class= "primo" type="submit">Send here!</button><br>
+    </form>
+    <ul class="wishlist-container empty">
+      
+    </ul>
   </div>
+
+  <template id="wishlist-item">
+    <li class="wishlist-item">
+      <input type="checkbox" />&nbsp<span>test wish</span>
+    </li>
+  </template>
+
   <script type="text/javascript">
     const partyColors = ['#001f3f', '#0074D9', '#7FDBFF', '#39CCCC', '#3D9970', '#2ECC40', '#01FF70', '#FFDC00', '#FF851B', '#FF4136', '#85144b', '#F012BE', '#B10DC9', '#111111', '#AAAAAA', '#DDDDDD', '#FFFFFF'];
 
     const randomColor = () => partyColors[Math.floor(Math.random() * partyColors.length)];
     
-    function onWindowReady (e) {
+    function partyFunction () {
       const partyBtn = document.querySelector('.start');
       const danceFloor = document.querySelector('.disco');
 
@@ -67,9 +117,152 @@
       });
     }
 
+    function itemsChecked() {
+      const wliContainer = document.querySelector('.wishlist-container');
+      const wliCheckboxes = wliContainer.querySelectorAll('input[type="checkbox"]');
+      console.log(Array.from(wliCheckboxes).map((cb) => ({
+        // CHALLENGE: get the parent element and then the span's text
+        // text: cb.innerText,
+        checked: cb.checked,
+      })));
+    }
+
+    const wishlistItems = [];
+
+    function createWishListEntry(text) {
+      wishlistItems.push(text);
+      const wliContainer = document.querySelector('.wishlist-container');
+      const wliTpl = document.querySelector('#wishlist-item');
+      const clone = wliTpl.content.cloneNode(true);
+      const wliTxt = clone.querySelector('span');
+      wliTxt.textContent = text;
+      wliContainer.appendChild(clone);
+      if(wishlistItems.length > 0) {
+        wliContainer.classList.remove('empty');
+      }
+    }
+
+
+    function instantiateWishlist () {
+      const addForm = document.forms['add-wishing-list'];
+      addForm.addEventListener('submit', function (event) {
+        
+        // this prevents the form actually submitting data anywhere
+        event.preventDefault();
+
+        // get text from input on form submit event
+        const wishInput = addForm.querySelector('input[type="text"]').value;
+        
+        if (wishInput) createWishListEntry(wishInput);
+
+      });
+    }
+
+    function onWindowReady (e) {
+      instantiateWishlist();
+
+      const partyBtn = document.querySelector('.start');
+      partyBtn.addEventListener('click', itemsChecked);
+
+      // nodelist || array || checking
+      // const allDivs = document.querySelectorAll('div');
+      // console.log(typeof allDivs, allDivs, allDivs.length);
+
+    }
+
     window.addEventListener('DOMContentLoaded', onWindowReady);
 
-  </script>
-  <script src="https://kit.fontawesome.com/a07edb0785.js" crossorigin="anonymous"></script>
+    // add wishing list 
+   
+    
+  //   const list = document.querySelector('.disco');
+  //   const deleteButton = document.querySelector('.delete-items');
+  //  /* const select = document.querySelector('#items') */
+
+     
+
+     
+  //     console.log(z);
+
+  //     if (z) {
+   
+
+  //      function createList(x,y) {
+
+  //       // create elements
+
+  //       const input = document.createElement('input');
+  //       const label = document.createElement('label');
+
+  //       // set attributes
+
+  //       input.setAttribute('type', 'checkbox');
+  //       input.setAttribute('id', y);
+        
+  //       label.htmlFor = y;
+  //       input.classList.add('main-list');
+
+  //       // add contents
+
+  //       label.textContent = z;
+
+  //       // insert elements
+
+  //       x.appendChild(input);
+  //       x.appendChild(label);
+  //    }
+
+  //   createList(list, 'prova');
+
+  // }
+
+
+ // });
+
+  
+
+/*    addForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const userValue = addForm.querySelector("input[type='text']").value;
+
+      if(userValue) {
+
+      // create element
+      const option = document.createElement("option");
+      const input = document.createElement("input");
+    
+      // set attribute
+
+      input.setAttribute ("type","checkbox")
+
+      // create class
+
+      input.classList.add("vabbe")
+
+      // add content
+
+      input.textContent = userValue;
+      
+
+      
+
+      // add class
+      
+   
+      // append to dom
+  
+      list.appendChild(input);
+      
+      
+
+      // add event to inline-botton
+       
+
+    }
+
+    })*/
+
+</script>
+<script src="https://kit.fontawesome.com/a07edb0785.js" crossorigin="anonymous"></script>
 </body>
 </html>
