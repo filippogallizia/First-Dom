@@ -1,268 +1,252 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DOM playground</title>
+  <title>web application</title>
   <style type="text/css">
+
     * {
-      margin: 0;
+      box-sizing: border-box;
+      font-family: helvetica;
     }
-    .disco {
-      display: flex;
-      flex-direction: column;
-      background-color: green;
-      justify-content: center;
-      align-items: center; 
-      height: 50vh;
-      
-         }
-    .start {
-      cursor: pointer;
-      font-weight: 600;
-      color: white;
-      padding: 0.5em 2em; 
-      background-color: crimson;
-      border-radius: 4px;
-      border-bottom: 3px solid darkred;
-      font-size: 20px;
-      font-family: "Helvetica";
+    
+    header{
+      margin: auto; 
+      background-color: #EDE2E2;
       text-align: center;
-      border: black solid 1px;
     }
 
-    .start:hover {
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 15px -5px rgba(0,0,0,0.58);
+    /* input form */
+
+    .div-form {
+      display: flex;
+      justify-content: space-between;
+      padding: 1em;
+    
     }
 
-    form {
-      color: black;
+    /* form 1 */
+
+    .form-1 {
+      display: flex;
+      margin:  0;
     }
 
-    .inline-botton {
-      border: solid black 1px;
-      background-color: white;
-      color: red;
+    .div-child {
+      margin: 0 0.5em;
+      padding: 0.5em;
     }
 
-    .vabbe {
-      color: white;
+    .form-1 button {
+      background-color: yellow;
+
+    }
+    
+    .form-1 button:hover {
+      background-color: red;
     }
 
-    .empty {
-      visibility: hidden;
+    div input {
+      border: 5px solid #EDE2E2;
     }
 
-    .wishlist-container {
-      width: 300px;
-      background-color: #CCC;
-      margin: 16px 0 0 0;
-      padding: 0px 16px 16px 16px;
-      list-style: none;
-      font-size: 20px;
-      font-family: 'Helvetica';
+    /* form 2 */
+
+    .search-item {
+      display: flex;
     }
-    .wishlist-item {
-      margin-top: 16px;
-      color: #333;
-      background-color: #FAFAFA;
-      padding: 16px;
-      border-radius: 3px;
-      font-weight: 600;
+
+
+    /* party button */
+
+    .party-button {
+      background-color: red;
     }
+
+    .party-button:hover {
+      background-color: yellow;
+    }
+    
+    /* wish-list */
+
+    .div-wishList {
+      margin-left: 5em;
+    }
+
+    .wishing-container {
+        
+      text-align: left;
+    }
+
+    .delete-selected {
+      margin-top: 1em;
+      width: 10%;
+      border: red solid 1px;
+    }
+
   </style>
 </head>
 <body>
 
-  <div class="disco">
-    <div class="start">start <i class="fas fa-chevron-circle-right"></i></div>
-    <form id = "add-wishing-list" action="#" method="post">
-      <label for="random">Type your wishing list</label><br>
-      <input type="text" id="random"><br>
-      <button class= "primo" type="submit">Send here!</button><br>
-    </form>
-    <ul class="wishlist-container empty">
+  <header>
+    <h1>Hi Tim!</h1>
+    <h2>Welcome to your wishList</h2>
+  </header>
+
+  <main>
+
+    <div class="div-form">
+      <form name="add-wishing-list" class="form-1">
+        <label class="div-child" for="user-input">Type your wishing list:</label>
+        <input class="div-child" type="text" name="user-input" placeholder="type here"><br> 
+        <button class="div-child">
+        add
+        </button>
+      </form>
+      <button class="div-child party-button">Or Party</button>
+      <form class="search-item">
+        <label class="div-child" for="del-input"></label>
+        <input class="div-child" type="text" placeholder="search" name="del-input">
+      </form>
       
-    </ul>
-  </div>
+    </div>
 
-  <template id="wishlist-item">
-    <li class="wishlist-item">
-      <input type="checkbox" />&nbsp<span>test wish</span>
-    </li>
-  </template>
-
-  <script type="text/javascript">
-    const partyColors = ['#001f3f', '#0074D9', '#7FDBFF', '#39CCCC', '#3D9970', '#2ECC40', '#01FF70', '#FFDC00', '#FF851B', '#FF4136', '#85144b', '#F012BE', '#B10DC9', '#111111', '#AAAAAA', '#DDDDDD', '#FFFFFF'];
-
-    const randomColor = () => partyColors[Math.floor(Math.random() * partyColors.length)];
-    
-    function partyFunction () {
-      const partyBtn = document.querySelector('.start');
-      const danceFloor = document.querySelector('.disco');
-
-      let party = null;
+    <div class="div-wishList">
       
-      partyBtn.addEventListener('click', (event) => {
-        if(party) {
-          partyBtn.innerHTML = 'START';
-          clearInterval(party);
-          party = null;
-        } else {
-          partyBtn.innerHTML = 'STOP';
-          party = setInterval(() => {
-            danceFloor.style.backgroundColor = randomColor();
-          }, 200);
-        }
-      });
-    }
+        <ul class="wishing-container">
 
-    function itemsChecked() {
-      const wliContainer = document.querySelector('.wishlist-container');
-      const wliCheckboxes = wliContainer.querySelectorAll('input[type="checkbox"]');
-      console.log(Array.from(wliCheckboxes).map((cb) => ({
-        // CHALLENGE: get the parent element and then the span's text
-        // text: cb.innerText,
-        checked: cb.checked,
-      })));
-    }
-
-    const wishlistItems = [];
-
-    function createWishListEntry(text) {
-      wishlistItems.push(text);
-      const wliContainer = document.querySelector('.wishlist-container');
-      const wliTpl = document.querySelector('#wishlist-item');
-      const clone = wliTpl.content.cloneNode(true);
-      const wliTxt = clone.querySelector('span');
-      wliTxt.textContent = text;
-      wliContainer.appendChild(clone);
-      if(wishlistItems.length > 0) {
-        wliContainer.classList.remove('empty');
-      }
-    }
-
-
-    function instantiateWishlist () {
-      const addForm = document.forms['add-wishing-list'];
-      addForm.addEventListener('submit', function (event) {
-        
-        // this prevents the form actually submitting data anywhere
-        event.preventDefault();
-
-        // get text from input on form submit event
-        const wishInput = addForm.querySelector('input[type="text"]').value;
-        
-        if (wishInput) createWishListEntry(wishInput);
-
-      });
-    }
-
-    function onWindowReady (e) {
-      instantiateWishlist();
-
-      const partyBtn = document.querySelector('.start');
-      partyBtn.addEventListener('click', itemsChecked);
-
-      // nodelist || array || checking
-      // const allDivs = document.querySelectorAll('div');
-      // console.log(typeof allDivs, allDivs, allDivs.length);
-
-    }
-
-    window.addEventListener('DOMContentLoaded', onWindowReady);
-
-    // add wishing list 
-   
-    
-  //   const list = document.querySelector('.disco');
-  //   const deleteButton = document.querySelector('.delete-items');
-  //  /* const select = document.querySelector('#items') */
-
-     
-
-     
-  //     console.log(z);
-
-  //     if (z) {
-   
-
-  //      function createList(x,y) {
-
-  //       // create elements
-
-  //       const input = document.createElement('input');
-  //       const label = document.createElement('label');
-
-  //       // set attributes
-
-  //       input.setAttribute('type', 'checkbox');
-  //       input.setAttribute('id', y);
-        
-  //       label.htmlFor = y;
-  //       input.classList.add('main-list');
-
-  //       // add contents
-
-  //       label.textContent = z;
-
-  //       // insert elements
-
-  //       x.appendChild(input);
-  //       x.appendChild(label);
-  //    }
-
-  //   createList(list, 'prova');
-
-  // }
-
-
- // });
-
-  
-
-/*    addForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-      const userValue = addForm.querySelector("input[type='text']").value;
-
-      if(userValue) {
-
-      // create element
-      const option = document.createElement("option");
-      const input = document.createElement("input");
-    
-      // set attribute
-
-      input.setAttribute ("type","checkbox")
-
-      // create class
-
-      input.classList.add("vabbe")
-
-      // add content
-
-      input.textContent = userValue;
+        </ul>
       
-
+      <button class="delete-selected">Delete selected</button>
       
+      <!-- <template id="wishList-item">
+        <div>
+        <li class="wishList-item">
+        <input type="checkbox" />&nbsp<span>test wish</span>
+        </li>
+        <button class="remove-wishList">Delete</button>
+        </div>
+      </template> -->
+    </div>
 
-      // add class
-      
-   
-      // append to dom
-  
-      list.appendChild(input);
-      
-      
+  </main>
 
-      // add event to inline-botton
-       
-
-    }
-
-    })*/
-
-</script>
-<script src="https://kit.fontawesome.com/a07edb0785.js" crossorigin="anonymous"></script>
 </body>
 </html>
+
+<script type="text/javascript">
+
+// general variable
+const form = document.forms[0];
+let ul1 = document.querySelector(".wishing-container");
+const deleteButton = document.querySelector(".delete-selected")
+
+// make invisible delete button if there are no item
+
+if(ul1.querySelector("li") === null) {
+  deleteButton.style.display = "none";
+  
+}
+
+// adding wish list after the user's input
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+  //get the element
+  const ul = document.querySelector(".wishing-container");
+  //get the value
+  const userInput = document.querySelector("form input").value;
+  //create the element
+  const li = document.createElement("li");
+  const span = document.createElement("span");
+  const input = document.createElement("input");
+  const label = document.createElement("label");
+  const span2 = document.createElement("span");
+  //append the element
+  li.appendChild(input);
+  li.appendChild(label);
+  ul.appendChild(li);
+  // set id value
+  let idValue = userInput + 1
+  //set attribute
+  input.setAttribute("type", "checkbox");
+  input.setAttribute("id", idValue);
+  label.htmlFor = idValue;
+  //assign class
+  span.className = "ciao";
+  //insert text
+  label.textContent = userInput;
+  span.textContent = userInput;
+  //make the delete button visible
+    if(ul1.querySelector("li") !== null) {
+      deleteButton.style.display = "initial";
+      //ul1.style.border = "5px solid #EDE2E2";
+    }
+
+  document.querySelector("form input").value = "";
+})
+
+// add functionality to remove-selected botton
+
+const deleteSelected = document.querySelector(".delete-selected");
+
+deleteSelected.addEventListener("click", function(event) {
+  let checkBox = document.querySelectorAll("input[type='checkbox']");
+  Array.from(checkBox).forEach(function(e){
+    if(e.checked) {
+      e.parentElement.style.display = "none";
+    }
+  })
+})
+
+// add search function
+
+const searchForm = document.forms[1];
+const searchBar = document.querySelector(".search-item input");
+// prevent default action by the form
+searchForm.addEventListener("submit", function(e) {
+e.preventDefault();
+})
+
+searchBar.addEventListener("keyup", function(e) {
+  const term = searchBar.value.toLowerCase();
+  const items = document.querySelectorAll(".wishing-container li");
+    Array.from(items).forEach(function(e) {
+    const itemName = e.querySelector("label").textContent;
+    if(itemName.toLowerCase().indexOf(term) > -1) {
+      e.style.display = "block";
+    } else {
+      e.style.display = "none";
+    }
+  })
+})
+
+// party colors
+
+// generate a random color
+
+const partyColors = ['#001f3f', '#0074D9', '#7FDBFF', '#39CCCC', '#3D9970', '#2ECC40', '#01FF70', '#FFDC00', '#FF851B', '#FF4136', '#85144b', '#F012BE', '#B10DC9', '#111111', '#AAAAAA', '#DDDDDD', '#FFFFFF'];
+const index = Math.floor(Math.random()*17);
+
+function randomColor() { 
+return (partyColors[Math.floor(Math.random()*17)])}
+
+// add party functionality to party button
+
+const partyButton = document.querySelector(".party-button");
+const header = document.querySelector("header");
+let party = null;
+
+partyButton.addEventListener("click", function(event) {
+  if(party) {
+    console.log(2);
+    clearInterval(party)
+    party = null;
+  }
+  else {
+    party = setInterval(function() {
+      header.style.backgroundColor = randomColor()}, 200);
+    console.log(3)
+  }
+})
+
+</script>
