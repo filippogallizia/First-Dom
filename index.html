@@ -32,6 +32,7 @@
 </html>
 
 <script type="text/javascript">
+  // declare common variable
   const body = document.querySelector("body");
   const formOne = document.querySelector("form")
   const userInput = document.querySelector(".user-input");
@@ -41,21 +42,23 @@
 
   // add functionality to UserForm
    formOne.addEventListener("submit", function(event) {
+    //prevent default form action
     event.preventDefault();
+    // get user Input
     let userInputValue = userInput.value;
+    // if user input exixst than let's add the template
     if(userInputValue) {
       let clone = template.content.cloneNode(true);
       let templateText = clone.querySelector("span");
       templateText.textContent = userInputValue;
       body.appendChild(clone);
       let divButton = document.querySelectorAll(".div-button");
+    // if there are not buttons yet, let s add them
       if(divButton.length < 1) {
-      console.log(divButton)
       let clone2 = template2.content.cloneNode(true);
       body.appendChild(clone2);
       clone.insertBefore(clone2)
-     }
-  
+      }
     }
   
   })
