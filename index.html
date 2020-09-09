@@ -2,66 +2,194 @@
 <html>
 <head>
   <title>todomvc</title>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: "Helvetica";
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      position: absolute;
+      background-color: #FAFAFA;
+      width: 100%;
+      height: 100%;
+    }
+    .content {
+      margin: auto;
+      padding: 16px;
+      width: 400px;
+    }
+    .div-buttons {
+      padding: 16px 0px;
+    }
+    .button {
+      cursor: pointer;
+      padding: 4px 16px;
+      font-weight: 600;
+      color: white;
+      background-color: crimson;
+      border-radius: 4px;
+      border-bottom: 3px solid darkred;
+      font-size: 14px;
+      font-family: "Helvetica";
+      text-align: center;
+    }
+    .button:hover {
+      background-color: white;
+      color: black;
+      box-shadow: 3px 3px 15px -5px rgba(0,0,0,0.58);
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>todos</h1>
-  </header>
-  <body>
-    <form>
-      <input class="user-input" type="text" name="wishList" placeholder="What needs to be done?">
-    </form>
-    <template>
-      <form class="template-form">
-       <div>
-        <li class="wishList-item">
-        <input type="checkbox" />&nbsp<span>test wish</span>
-        </li>
-        </div>
+  <div class="container">
+    <div class="content">
+      <header>
+        <h1>todos</h1>
+      </header>
+      <form>
+        <input class="user-input" type="text" name="wishList" placeholder="What needs to be done?">
       </form>
-    </template>
-    <template class="template-button">
-      <div class="div-button">
-      <button class="button button-all">All</button>
-      <button class="button button-active">Active</button>
-      <button class="button button-completed">Completed</button>
+      <div class="wishList-item-container">
+        
       </div>
-    </template>
-  </body>
+
+      <div class="wishlist-footer" style="visibility: hidden;">
+        <div class="div-buttons">
+          <button class="button filter-btn" data-action="ALL">All</button>
+          <button class="button filter-btn" data-action="ACTIVE">Active</button>
+          <button class="button filter-btn" data-action="COMPLETED">Completed</button>
+          <button class="button delete-btn" data-action="CLEAR-COMPLETED">Clear completed</button>
+          
+        </div>
+      </div>
+      
+      <template id="tpl-form">
+        <form class="template-form">
+         <div>
+          <li class="wishList-item">
+            <input type="checkbox" />&nbsp<span>test wish</span>
+          </li>
+          </div>
+        </form>
+      </template>
+
+    </div>
+  </div>
 </body>
 </html>
 
 <script type="text/javascript">
-  // declare common variable
-  const body = document.querySelector("body");
-  const formOne = document.querySelector("form")
-  const userInput = document.querySelector(".user-input");
-  const template = document.querySelector("template");
-  const span = document.querySelector("template span");
-  const template2 = document.querySelector(".template-button");
 
-  // add functionality to UserForm
-   formOne.addEventListener("submit", function(event) {
-    //prevent default form action
-    event.preventDefault();
-    // get user Input
-    let userInputValue = userInput.value;
-    // if user input exixst than let's add the template
-    if(userInputValue) {
-      let clone = template.content.cloneNode(true);
-      let templateText = clone.querySelector("span");
-      templateText.textContent = userInputValue;
-      body.appendChild(clone);
-      let divButton = document.querySelectorAll(".div-button");
-    // if there are not buttons yet, let s add them
-      if(divButton.length < 1) {
-      let clone2 = template2.content.cloneNode(true);
-      body.appendChild(clone2);
-      clone.insertBefore(clone2)
-      }
+
+  // ACCESSORS AND HELPER FUNCTIONS
+
+  const formOne = document.querySelector('form')
+  const userInput = document.querySelector('.user-input');
+  const tplForm = document.querySelector('#tpl-form');
+  const divContainer = document.querySelector('.wishList-item-container');
+  const divFooter = document.querySelector('.wishlist-footer');
+  const deleteButton = document.querySelector(".delete-btn");
+
+  function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  // STATE
+
+  let items = [
+    { id: uuidv4(), title: 'item one', state: true },
+    { id: uuidv4(), title: 'item two', state: true },
+    { id: uuidv4(), title: 'item three', state: false },
+  ];
+
+  let cleared = [];
+
+  const FILTER_STATES = ['ALL', 'ACTIVE', 'COMPLETED', "CLEAR-COMPLETED"];
+  let CURRENT_STATE = FILTER_STATES[0];
+
+
+  // RENDERING
+
+  function render() {
+    divContainer.innerHTML = '';
+    items.filter(itm => {
+      if (CURRENT_STATE === FILTER_STATES[1]) return !itm.state;
+      if (CURRENT_STATE === FILTER_STATES[2]) return itm.state;   
+      return true;
+    }).forEach(itm => {
+      let clone = tplForm.content.cloneNode(true);
+      let templateText = clone.querySelector('span');
+      let templateInput = clone.querySelector('input');
+      templateText.textContent = itm.title;
+      templateInput.checked = itm.state;
+      templateInput.setAttribute('id', itm.id);
+      templateInput.addEventListener('change', checkboxChangeHandler);
+      divContainer.appendChild(clone);   
+    });
+    if (items.length === 0) {
+      divFooter.setAttribute('style', 'visibility: hidden;');
+    } else {
+      divFooter.setAttribute('style', 'visibility: visible;');
     }
-  
+  };
+  render();
+
+  function deleteCompleted() {
+     items.filter(function(e) {
+        return e.state
+      }).forEach(function(e) {
+        cleared.push(e);
+      });
+      items = items.filter(function(e) {
+        return !e.state;
+      })
+      render();
+     }
+
+  deleteButton.addEventListener("click", function(e) {
+    deleteCompleted();
   })
-  
+
+
+  function setFilterState(state) {
+    if (FILTER_STATES.indexOf(state) < 0) return;
+    CURRENT_STATE = state;
+    render();
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      setFilterState(e.target.getAttribute('data-action'));
+    });
+  });
+
+  formOne.addEventListener('submit', function(event) {
+    event.preventDefault();
+    let userInputValue = userInput.value;
+    if(userInputValue) {
+      items.push({
+        id: uuidv4(),
+        title: userInputValue,
+        state: false
+      });
+      render();
+      deleteCompleted();
+    }
+  });
+
+  function checkboxChangeHandler() {
+    const respectiveItem = items.find((itm) => itm.id === this.getAttribute('id'));
+    if(respectiveItem) {
+      respectiveItem.state = this.checked;
+    }
+  }
+
  
 </script>
