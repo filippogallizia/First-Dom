@@ -1,52 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>todomvc</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-  <script src="myScript.js"></script>
-  <div class="container">
-    <div class="content">
-      <header>
-        <h1>todos</h1>
-      </header>
-      <form>
-        <input class="user-input" type="text" name="wishList" placeholder="What needs to be done?">
-      </form>
-      <div class="wishList-item-container">
-        
-      </div>
-
-      <div class="wishlist-footer" style="visibility: hidden;">
-        <div class="div-buttons">
-          <button class="button filter-btn" data-action="ALL">All</button>
-          <button class="button filter-btn" data-action="ACTIVE">Active</button>
-          <button class="button filter-btn" data-action="COMPLETED">Completed</button>
-          <button class="button delete-btn" data-action="CLEAR-COMPLETED" style="visibility: hidden;">Clear completed</button>
-          
-        </div>
-      </div>
-      
-      <template id="tpl-form">
-        <form class="template-form">
-         <div>
-          <li class="wishList-item">
-            <input type="checkbox" />&nbsp<span>test wish</span>
-          </li>
-          </div>
-        </form>
-      </template>
-
-    </div>
-  </div>
-</body>
-</html>
-
-<!-- <script type="text/javascript">
-
-
-  // ACCESSORS AND HELPER FUNCTIONS
+  
+  document.addEventListener("DOMContentLoaded",function() {
+    // ACCESSORS AND HELPER FUNCTIONS
 
   const formOne = document.querySelector('form')
   const userInput = document.querySelector('.user-input');
@@ -152,28 +106,20 @@
       items.push({
         id: uuidv4(),
         title: userInputValue,
-        state: false
+        state: false,
       });
-
       render();
       deleteCompleted();
     }
    });
 
-  function showDeleteButton() {
-    items.forEach(function(e) {
-        })
-  }
-
-  showDeleteButton()
-
   function checkboxChangeHandler() {
     const respectiveItem = items.find((itm) => itm.id === this.getAttribute('id'));
     if(respectiveItem) {
       respectiveItem.state = this.checked;
-            
     } 
   }
 
- 
-</script> -->
+}) 
+
+  
